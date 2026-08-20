@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>시간표 자동 입력기</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>시간표 자동 입력기</h1>
+      <p>로그인은 직접, 학기 전체 저장은 자동으로 진행합니다.</p>
+    </div>
+    <button id="helpButton" type="button">사용 방법</button>
+  </header>
+
+  <main>
+    <section id="tutorialPanel" class="tutorial-panel" hidden>
+      <div class="tutorial-heading">
+        <span id="tutorialStep">사용 방법 1 / 4</span>
+        <button id="tutorialClose" type="button" aria-label="사용 방법 닫기">종료</button>
+      </div>
+      <h2 id="tutorialTitle">연간시간표 불러오기</h2>
+      <p id="tutorialText"></p>
+      <p id="tutorialStatus" class="tutorial-status"></p>
+      <div class="tutorial-navigation">
+        <button id="tutorialPrev" type="button">이전</button>
+        <button id="tutorialNext" type="button" class="primary">다음</button>
+      </div>
+    </section>
+
+    <section id="fileSection">
+      <h2>1. 연간시간표 불러오기</h2>
+      <input id="datFile" type="file" accept=".hwpx,.hwp,.dat,application/octet-stream">
+      <p class="hint">EasyEdu에서 출력한 HWPX를 권장합니다. DAT도 사용할 수 있습니다.</p>
+      <label id="semesterSelectRow" hidden>입력할 학기
+        <select id="semesterSelect"></select>
+      </label>
+      <div id="fileSummary" class="summary muted">아직 파일을 선택하지 않았습니다.</div>
+    </section>
+
+    <section id="previewSection">
+      <h2>2. 주차 미리보기</h2>
+      <label>주차
+        <select id="weekSelect" disabled></select>
+      </label>
+      <div class="legend">
+        <span><i class="normal"></i>일반</span>
+        <span><i class="specialist"></i>전담</span>
+        <span><i class="room"></i>특별실</span>
+        <span><i class="event"></i>행사표시</span>
+      </div>
+      <div id="preview" class="preview muted">DAT를 선택하면 표시됩니다.</div>
+    </section>
+
+    <section id="inspectSection">
+      <h2>3. 나이스 화면 확인</h2>
+      <button id="inspectButton" type="button">현재 화면 점검</button>
+      <div id="screenSummary" class="summary muted">학급시간표 관리 화면에서 점검하세요.</div>
+    </section>
+
+    <section id="teacherSection">
+      <h2>4. 교사 선택 기준</h2>
+      <label>전담 과목의 교사 순서
+        <select id="teacherOrderSelect">
+          <option value="homeroom-first">첫 번째: 담임 / 두 번째: 전담</option>
+          <option value="specialist-first">첫 번째: 전담 / 두 번째: 담임</option>
+        </select>
+      </label>
+      <label class="check-row">
+        <input id="teacherOrderConfirmed" type="checkbox">
+        위 순서를 직접 확인했습니다.
+      </label>
+      <p class="hint">HWPX에서 초록 글씨인 과목은 전담 교사를, 초록 글씨가 아니면 담임을 선택합니다.</p>
+    </section>
+
+    <section id="semesterSection">
+      <h2>5. 학기 전체 입력</h2>
+      <button id="fillSemesterButton" type="button" class="primary" disabled>학기 전체 시간표 입력</button>
+      <p class="warning">입력 중에는 나이스 탭과 이 패널을 닫지 마세요.</p>
+    </section>
+
+    <section>
+      <h2>진행 기록</h2>
+      <pre id="log">대기 중</pre>
+    </section>
+  </main>
+
+  <dialog id="noSpecialistDialog" class="confirm-dialog" aria-labelledby="noSpecialistTitle">
+    <div class="confirm-dialog-content">
+      <div class="confirm-dialog-icon" aria-hidden="true">!</div>
+      <h2 id="noSpecialistTitle">연간시간표에서 전담 시간을 찾지 못했습니다.</h2>
+      <p>전담 수업 없이 작성할까요?</p>
+      <div class="confirm-dialog-actions">
+        <button id="noSpecialistProceed" type="button" class="primary">전담 수업 없이 작성</button>
+        <button id="noSpecialistCancel" type="button">취소</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

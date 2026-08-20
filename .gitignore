@@ -1,0 +1,14 @@
+# 배포용 ZIP과 빌드 산출물은 GitHub Release에만 첨부합니다.
+dist/
+
+# 학교별 원본 시간표와 개인정보가 포함될 수 있는 파일은 저장소에 올리지 않습니다.
+*.hwpx
+*.hwp
+*.dat
+*.crx
+*.pem
+
+# 운영체제·편집기 임시 파일
+.DS_Store
+Thumbs.db
+*.swp
