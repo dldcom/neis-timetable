@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "시간표 자동 입력기",
-  "version": "0.9.9",
+  "version": "0.9.12",
   "description": "EasyEdu HWPX 연간시간표를 로그인된 경기 나이스 학급시간표에 입력·저장하는 비공식 교사용 도구입니다.",
   "minimum_chrome_version": "114",
   "permissions": ["sidePanel", "activeTab", "scripting"],

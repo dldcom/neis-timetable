@@ -138,6 +138,9 @@ function parseHwpxTable(table, greenCharPrIds, redCharPrIds) {
   const dayHeaders = infos.filter(cell => cell.row === 2 && DAYS.includes(cell.text));
   if (dayHeaders.length !== 5) throw new Error(`${semester}학기 HWPX 요일 머리글이 5개가 아닙니다: ${dayHeaders.length}`);
   const periodHeaders = infos.filter(cell => cell.row === 3 && /^[1-8]$/.test(cell.text));
+  const rowTwoBoundaries = [...new Set(infos.filter(cell => cell.row === 2).map(cell => cell.col))]
+    .sort((a, b) => a - b);
+  const tableColumnCount = Number(table.getAttribute("colCnt")) || Number.POSITIVE_INFINITY;
   const cells = [];
   const unknown = new Set();
   const weekRanges = new Map();
@@ -145,7 +148,7 @@ function parseHwpxTable(table, greenCharPrIds, redCharPrIds) {
     const week = Number(weekCell.text);
     if (week < 1 || week > 40) continue;
     const rangeText = lookup.get(`${weekCell.row}/1`)?.text || "";
-    const rangeMatch = rangeText.match(/(\d{1,2})\.\s*(\d{1,2})\s*-\s*(\d{1,2})\.\s*(\d{1,2})/);
+    const rangeMatch = rangeText.match(/(\d{1,2})\.\s*(\d{1,2})\s*[-~～]\s*(\d{1,2})\.\s*(\d{1,2})/);
     if (rangeMatch) {
       weekRanges.set(week, {
         text: rangeText.replace(/\s+/g, " ").trim(),
@@ -155,8 +158,7 @@ function parseHwpxTable(table, greenCharPrIds, redCharPrIds) {
     }
     for (let day = 0; day < 5; day++) {
       const start = dayHeaders.find(cell => cell.text === DAYS[day]).col;
-      const nextStarts = dayHeaders.filter(cell => cell.col > start).map(cell => cell.col);
-      const end = nextStarts.length ? Math.min(...nextStarts) : 34;
+      const end = rowTwoBoundaries.find(col => col > start) ?? tableColumnCount;
       const headers = periodHeaders.filter(cell => cell.col >= start && cell.col < end)
         .sort((a, b) => a.col - b.col);
       for (const header of headers) {
@@ -206,8 +208,10 @@ async function parseHwpx(arrayBuffer) {
     for (const table of localElements(xml, "tbl").filter(item => {
       const cells = localElements(item, "tc").map(xmlCellInfo).filter(Boolean);
       const allText = cells.map(cell => cell.text).join(" ");
+      const recognizedTitle = allText.includes("교육과정 연간시간운영계획") ||
+        allText.includes("연간시간표");
       return Number(item.getAttribute("colCnt")) >= 30 &&
-        allText.includes("교육과정 연간시간운영계획") && /\d{4}학년도\s*[12]학기/.test(allText);
+        recognizedTitle && /\d{4}학년도\s*[12]학기/.test(allText);
     })) {
       const parsed = parseHwpxTable(table, greenCharPrIds, redCharPrIds);
       if (parsed) semesterTables.push(parsed);

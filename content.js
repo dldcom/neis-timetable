@@ -122,14 +122,35 @@
     return cell;
   }
 
-  function cellValue(cell) {
-    const label = cell.getAttribute("aria-label") || "";
-    const prefix = new RegExp(`^\\d+행\\s+${DAY_NAMES[Number(cell.dataset.cellindex) - 1]}\\s*`);
-    const fromLabel = label.replace(prefix, "")
+  function visibleCellText(cell) {
+    return cell?.textContent?.replace(/(?:<br\s*\/?>|&lt;br\s*\/?&gt;)/gi, " ")
+      .replace(/\s+/g, " ").trim() || "";
+  }
+
+  function cellAriaText(cell) {
+    const label = cell?.getAttribute("aria-label") || "";
+    const day = DAY_NAMES[Number(cell?.dataset?.cellindex) - 1] || "";
+    const prefix = new RegExp("^\\d+행\\s+" + day + "\\s*");
+    return label.replace(prefix, "")
       .replace(/(?:<br\s*\/?>|&lt;br\s*\/?&gt;)/gi, " ")
-      .trim();
-    if (fromLabel) return fromLabel;
-    return cell.textContent.replace(/\s+/g, " ").trim();
+      .replace(/\s+/g, " ").trim();
+  }
+
+  function cellValue(cell) {
+    // 나이스는 화면에 보이는 글자와 aria-label을 서로 다른 시점에 갱신할 수 있다.
+    // 충돌 검사는 화면 글자를 우선 사용하고, 화면 글자가 없을 때만 aria-label을 사용한다.
+    return visibleCellText(cell) || cellAriaText(cell);
+  }
+
+  function cellHasSubject(cell, subject) {
+    const wanted = String(subject || "").replace(/\s+/g, "");
+    if (!wanted) return false;
+
+    const visibleText = visibleCellText(cell).replace(/\s+/g, "");
+    if (visibleText) return visibleText.includes(wanted);
+
+    // 화면 텍스트가 아직 비어 있는 경우에만 접근성 라벨을 보조로 확인한다.
+    return cellAriaText(cell).replace(/\s+/g, "").includes(wanted);
   }
 
   function dispatchMouse(element, type, button = 0, contextMenuOrder = false) {
@@ -276,8 +297,7 @@
     option.scrollIntoView({ block: "nearest" });
     leftClick(option);
     await waitFor(
-      () => cellValue(timetableCell(cellData.day, cellData.period)).replace(/\s+/g, "")
-        .startsWith(cellData.subject.replace(/\s+/g, "")),
+      () => cellHasSubject(timetableCell(cellData.day, cellData.period), cellData.subject),
       5000,
       80,
       `${cellData.subject} 선택 후 셀 값이 화면에 반영되지 않았습니다.`
