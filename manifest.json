@@ -1,11 +1,29 @@
 {
   "manifest_version": 3,
   "name": "시간표 자동 입력기",
-  "version": "0.9.12",
-  "description": "EasyEdu HWPX 연간시간표를 로그인된 경기 나이스 학급시간표에 입력·저장하는 비공식 교사용 도구입니다.",
+  "version": "0.9.13",
+  "description": "EasyEdu HWPX 연간시간표를 로그인된 시도교육청 나이스 학급시간표에 입력·저장하는 비공식 교사용 도구입니다.",
   "minimum_chrome_version": "114",
   "permissions": ["sidePanel", "activeTab", "scripting"],
-  "host_permissions": ["https://goe.neis.go.kr/*"],
+  "host_permissions": [
+    "https://sen.neis.go.kr/*",
+    "https://pen.neis.go.kr/*",
+    "https://dge.neis.go.kr/*",
+    "https://ice.neis.go.kr/*",
+    "https://gen.neis.go.kr/*",
+    "https://dje.neis.go.kr/*",
+    "https://use.neis.go.kr/*",
+    "https://sje.neis.go.kr/*",
+    "https://goe.neis.go.kr/*",
+    "https://kwe.neis.go.kr/*",
+    "https://cbe.neis.go.kr/*",
+    "https://cne.neis.go.kr/*",
+    "https://jbe.neis.go.kr/*",
+    "https://jne.neis.go.kr/*",
+    "https://gbe.neis.go.kr/*",
+    "https://gne.neis.go.kr/*",
+    "https://jje.neis.go.kr/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
@@ -27,7 +45,25 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://goe.neis.go.kr/*"],
+      "matches": [
+        "https://sen.neis.go.kr/*",
+        "https://pen.neis.go.kr/*",
+        "https://dge.neis.go.kr/*",
+        "https://ice.neis.go.kr/*",
+        "https://gen.neis.go.kr/*",
+        "https://dje.neis.go.kr/*",
+        "https://use.neis.go.kr/*",
+        "https://sje.neis.go.kr/*",
+        "https://goe.neis.go.kr/*",
+        "https://kwe.neis.go.kr/*",
+        "https://cbe.neis.go.kr/*",
+        "https://cne.neis.go.kr/*",
+        "https://jbe.neis.go.kr/*",
+        "https://jne.neis.go.kr/*",
+        "https://gbe.neis.go.kr/*",
+        "https://gne.neis.go.kr/*",
+        "https://jje.neis.go.kr/*"
+      ],
       "js": ["content.js"],
       "run_at": "document_idle"
     }

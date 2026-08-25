@@ -5,6 +5,13 @@ const SUBJECTS = {
   "자": "자율·자치활동", "동": "동아리활동", "진": "진로활동"
 };
 const DAYS = ["월", "화", "수", "목", "금"];
+const SUPPORTED_NEIS_HOSTS = new Set([
+  "sen.neis.go.kr", "pen.neis.go.kr", "dge.neis.go.kr", "ice.neis.go.kr",
+  "gen.neis.go.kr", "dje.neis.go.kr", "use.neis.go.kr", "sje.neis.go.kr",
+  "goe.neis.go.kr", "kwe.neis.go.kr", "cbe.neis.go.kr", "cne.neis.go.kr",
+  "jbe.neis.go.kr", "jne.neis.go.kr", "gbe.neis.go.kr", "gne.neis.go.kr",
+  "jje.neis.go.kr"
+]);
 const COLORS = {
   "00 00 00 00": "normal",
   "22 66 09 00": "specialist",
@@ -407,8 +414,13 @@ function renderPreview() {
 
 async function activeTab() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (!tab || !tab.id || !tab.url?.startsWith("https://goe.neis.go.kr/"))
-    throw new Error("나이스 학급시간표 관리 탭을 활성화해 주세요.");
+  let supported = false;
+  try {
+    const url = new URL(tab?.url || "");
+    supported = url.protocol === "https:" && SUPPORTED_NEIS_HOSTS.has(url.hostname);
+  } catch (_) {}
+  if (!tab || !tab.id || !supported)
+    throw new Error("지원되는 시도교육청 나이스 학급시간표 관리 탭을 활성화해 주세요.");
   return tab;
 }
 

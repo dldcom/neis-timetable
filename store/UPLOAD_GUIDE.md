@@ -2,7 +2,7 @@
 
 ## 준비된 파일
 
-- 업로드 ZIP: `../dist/EasyEdu-timetable-helper-0.7.0.zip`
+- 업로드 ZIP: `../dist/EasyEdu-timetable-helper-0.9.13.zip`
 - 스토어 문안: `STORE_LISTING.md`
 - 개인정보 안내: `PRIVACY.md`
 - 아이콘: `../icons/icon-128.png`
@@ -18,7 +18,7 @@
 1. [Chrome 개발자 대시보드](https://chrome.google.com/webstore/devconsole/)에 로그인합니다.
 2. 개발자 계정 등록을 완료합니다.
 3. `새 항목`을 누릅니다.
-4. `EasyEdu-timetable-helper-0.7.0.zip`을 업로드합니다.
+4. `EasyEdu-timetable-helper-0.9.13.zip`을 업로드합니다.
 
 ZIP의 루트에는 `manifest.json`이 있으며 실행에 필요한 파일만 들어 있습니다.
 
